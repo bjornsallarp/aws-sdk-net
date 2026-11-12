@@ -12,6 +12,7 @@ public sealed class DynamoDBResponseProvider
     private const string PartitionKeyValue = "pk";
     private const string SortKeyValue = "sk";
     private const string DerivedTypeAttributeName = "$type";
+    private const string BatchWriteItemResponse = "{\"UnprocessedItems\":{}}";
     private readonly string _getItemResponse;
     private readonly string _queryResponse;
     private readonly string _scanResponse;
@@ -92,6 +93,11 @@ public sealed class DynamoDBResponseProvider
         if (target.EndsWith(TargetPrefix + "DescribeTable", StringComparison.Ordinal))
         {
             return _describeTableResponse;
+        }
+
+        if (target.EndsWith(TargetPrefix + "BatchWriteItem", StringComparison.Ordinal))
+        {
+            return BatchWriteItemResponse;
         }
 
         return "{}";

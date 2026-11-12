@@ -46,6 +46,7 @@ Mocked client:
 - `DynamoDbContextLoadBenchmark` - Measures `DynamoDBContext.Load*` object retrieval patterns with mocked responses.
 - `DynamoDbContextQueryBenchmark` - Measures `DynamoDBContext.Query*` patterns and expression usage with mocked responses.
 - `DynamoDbContextSaveBenchmark` - Measures `DynamoDBContext.Save*` object persistence patterns with mocked responses.
+- `DynamoDbContextGameStateSaveBenchmark` - Measures `DynamoDBContext.SaveAsync` and a 25-item batch write of a deep, wide object graph (nested objects, lists, sets, enums, binary) with mocked responses.
 - `DynamoDbContextScanBenchmark` - Measures `DynamoDBContext.Scan*` patterns with mocked responses.
 - `TableDeleteItemBenchmark` - Measures low-level `Table.DeleteItem*` operations with mocked responses.
 - `TableGetItemBenchmark` - Measures low-level `Table.GetItem*` operations with mocked responses.
