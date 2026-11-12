@@ -38,7 +38,9 @@ namespace Amazon.Util
         /// <summary>
         /// Tracker. Must be disposed.
         /// </summary>
-        private class Tracker : IDisposable
+        // Holds no unmanaged resources, so it has no finalizer: a finalizer made every Track call
+        // allocate a finalizable object even though it could only ever set the disposed flag.
+        private sealed class Tracker : IDisposable
         {
             public object Target { get; private set; }
             private CircularReferenceTracking State { get; set; }
@@ -56,40 +58,17 @@ namespace Amazon.Util
                     "Tracking {0}", Target);
             }
 
-            #region Dispose Pattern Implementation
-
             /// <summary>
-            /// Implements the Dispose pattern
-            /// </summary>
-            /// <param name="disposing">Whether this object is being disposed via a call to Dispose
-            /// or garbage collected.</param>
-            protected virtual void Dispose(bool disposing)
-            {
-                if (!this.disposed)
-                {
-                    if (disposing)
-                    {
-                        State.PopTracker(this);
-                    }
-                    this.disposed = true;
-                }
-            }
-
-            /// <summary>
-            /// Disposes of all managed and unmanaged resources.
+            /// Removes the target from the reference list.
             /// </summary>
             public void Dispose()
             {
-                this.Dispose(true);
-                GC.SuppressFinalize(this);
+                if (!this.disposed)
+                {
+                    State.PopTracker(this);
+                    this.disposed = true;
+                }
             }
-
-            ~Tracker()
-            {
-                this.Dispose(false);
-            }
-
-            #endregion
         }
 
         /// <summary>

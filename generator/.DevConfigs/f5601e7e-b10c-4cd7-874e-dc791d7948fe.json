@@ -1,0 +1,9 @@
+{
+  "core": {
+    "changeLogMessages": [
+      "Remove the finalizer from the internal tracker returned by CircularReferenceTracking.Track, so tracking an object no longer allocates a finalizable object."
+    ],
+    "type": "patch",
+    "updateMinimum": false
+  }
+}
