@@ -1011,7 +1011,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
                 var key = item.Key;
                 var entry = item.Value;
                 AttributeValue entryAttributeValue;
-                using (conversionConfig.CRT.Track(entry))
+                using (conversionConfig.TrackNested(entry))
                 {
                     entryAttributeValue = entry.ConvertToAttributeValue(conversionConfig);
                 }

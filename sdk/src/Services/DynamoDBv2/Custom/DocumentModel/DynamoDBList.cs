@@ -169,7 +169,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
             foreach (var entry in Entries)
             {
                 AttributeValue entryAttributeValue;
-                using (conversionConfig.CRT.Track(entry))
+                using (conversionConfig.TrackNested(entry))
                 {
                     entryAttributeValue = entry.ConvertToAttributeValue(conversionConfig);
                 }

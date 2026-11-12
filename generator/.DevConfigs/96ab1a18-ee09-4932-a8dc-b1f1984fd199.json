@@ -1,0 +1,11 @@
+{
+  "services": [
+    {
+      "serviceName": "DynamoDBv2",
+      "type": "patch",
+      "changeLogMessages": [
+        "Reduce allocations and CPU when converting nested documents and lists to attribute values by skipping circular-reference tracking for scalar entries, which cannot form a cycle."
+      ]
+    }
+  ]
+}

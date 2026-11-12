@@ -43,6 +43,15 @@ namespace Amazon.DynamoDBv2.DocumentModel
                 CRT = new CircularReferenceTracking();
                 IsEmptyStringValueEnabled = isEmptyStringValueEnabled;
             }
+
+            // Leaf entries cannot reference other entries, so they cannot be part of a cycle.
+            public IDisposable TrackNested(DynamoDBEntry entry)
+            {
+                if (entry is Primitive || entry is DynamoDBBool || entry is PrimitiveList || entry is DynamoDBNull)
+                    return null;
+
+                return CRT.Track(entry);
+            }
         }
 
         #region Internal conversion methods
