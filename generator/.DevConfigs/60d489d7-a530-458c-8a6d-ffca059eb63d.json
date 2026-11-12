@@ -1,0 +1,11 @@
+{
+  "services": [
+    {
+      "serviceName": "DynamoDBv2",
+      "type": "patch",
+      "changeLogMessages": [
+        "Reduce allocations in DynamoDBContext batch writes by not snapshotting the internal put documents for change tracking after the write."
+      ]
+    }
+  ]
+}

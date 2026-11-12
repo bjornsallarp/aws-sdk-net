@@ -84,6 +84,10 @@ namespace Amazon.DynamoDBv2.DocumentModel
         internal List<Document> ToPut { get; private set; }
         internal TracerProvider TracerProvider { get; private set; }
 
+        // False for DynamoDBContext batches: their put documents are discarded after the write,
+        // so snapshotting them for change tracking (CommitChanges) would be wasted work.
+        internal bool CommitPutDocuments { get; set; } = true;
+
         #endregion
 
 
@@ -474,7 +478,9 @@ namespace Amazon.DynamoDBv2.DocumentModel
                         if (item.WriteRequest.PutRequest != null)
                         {
                             var key = table.MakeKey(item.Document);
-                            tableDocumentMap.Add(key, item.Document);
+                            // The key is still added (it rejects duplicate keys), but only documents
+                            // that need committing are kept.
+                            tableDocumentMap.Add(key, item.CommitDocument ? item.Document : null);
                         }
                     }
 
@@ -560,7 +566,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
                     // Commit the remaining documents in the document map
                     foreach (var document in tableDocumentMap.Values)
                     {
-                        document.CommitChanges();
+                        document?.CommitChanges();
                     }
                     // Replace existing documents with just the unprocessed documents
                     documentMap[tableName] = unprocessedDocuments;
@@ -575,7 +581,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
             {
                 foreach (var document in tableDocumentMap.Values)
                 {
-                    document.CommitChanges();
+                    document?.CommitChanges();
                 }
             }
         }
@@ -615,7 +621,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
                     // Commit the remaining documents in the document map
                     foreach (var document in tableDocumentMap.Values)
                     {
-                        document.CommitChanges();
+                        document?.CommitChanges();
                     }
                     // Replace existing documents with just the unprocessed documents
                     documentMap[tableName] = unprocessedDocuments;
@@ -630,7 +636,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
             {
                 foreach (var document in tableDocumentMap.Values)
                 {
-                    document.CommitChanges();
+                    document?.CommitChanges();
                 }
             }
         }
@@ -667,7 +673,8 @@ namespace Amazon.DynamoDBv2.DocumentModel
                             {
                                 PutRequest = new PutRequest { Item = item }
                             },
-                            Document = toPut
+                            Document = toPut,
+                            CommitDocument = batch.CommitPutDocuments
                         });
                     }
                 }
@@ -738,6 +745,8 @@ namespace Amazon.DynamoDBv2.DocumentModel
         public WriteRequest WriteRequest { get; set; }
 
         public Document Document { get; set; }
+
+        public bool CommitDocument { get; set; }
     }
 
     internal class KeyComparer : IEqualityComparer<Key>

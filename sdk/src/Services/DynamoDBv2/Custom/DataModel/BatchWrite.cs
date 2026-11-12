@@ -135,7 +135,7 @@ namespace Amazon.DynamoDBv2.DataModel
 
             // Table.CreateBatchWrite() returns the IDocumentBatchWrite interface.
             // But since we rely on the internal behavior of DocumentBatchWrite, we instantiate it via the constructor.
-            DocumentBatch = new DocumentBatchWrite(table);
+            DocumentBatch = new DocumentBatchWrite(table) { CommitPutDocuments = false };
 
             TracerProvider = context?.Client?.Config?.TelemetryProvider?.TracerProvider
                 ?? AWSConfigs.TelemetryProvider.TracerProvider;
