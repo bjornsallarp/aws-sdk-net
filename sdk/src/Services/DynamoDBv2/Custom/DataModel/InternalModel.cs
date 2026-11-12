@@ -371,8 +371,13 @@ namespace Amazon.DynamoDBv2.DataModel
         public HashSet<object> ConvertedObjects { get; private set; }
 
         public ItemStorage(ItemStorageConfig storageConfig)
+            : this(storageConfig, new Document())
         {
-            Document = new Document();
+        }
+
+        public ItemStorage(ItemStorageConfig storageConfig, Document document)
+        {
+            Document = document;
             Config = storageConfig;
             ConvertedObjects = new HashSet<object>();
         }
@@ -480,6 +485,11 @@ namespace Amazon.DynamoDBv2.DataModel
         public IEnumerable<PropertyStorage> AllPropertyStorage
         {
             get { return PropertyToPropertyStorageMapping.Values; }
+        }
+
+        public int PropertyCount
+        {
+            get { return PropertyToPropertyStorageMapping.Count; }
         }
         public bool FindPropertyByPropertyName(string propertyName, out PropertyStorage propertyStorage)
         {

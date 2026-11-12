@@ -165,7 +165,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
 
             AttributeValue attribute = new AttributeValue();
 
-            var items = new List<AttributeValue>();
+            var items = new List<AttributeValue>(Entries.Count);
             foreach (var entry in Entries)
             {
                 AttributeValue entryAttributeValue;

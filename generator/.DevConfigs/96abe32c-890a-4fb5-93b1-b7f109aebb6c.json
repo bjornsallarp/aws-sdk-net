@@ -1,0 +1,11 @@
+{
+  "services": [
+    {
+      "serviceName": "DynamoDBv2",
+      "type": "patch",
+      "changeLogMessages": [
+        "Reduce allocations when DynamoDBContext converts objects to documents and attribute maps by presizing dictionaries and lists to their known sizes."
+      ]
+    }
+  ]
+}

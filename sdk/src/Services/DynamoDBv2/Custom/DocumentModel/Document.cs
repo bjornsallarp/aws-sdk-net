@@ -59,6 +59,12 @@ namespace Amazon.DynamoDBv2.DocumentModel
             currentValues = new Dictionary<string, DynamoDBEntry>(values);
         }
 
+        internal Document(int capacity)
+        {
+            originalValues = new Dictionary<string, DynamoDBEntry>();
+            currentValues = new Dictionary<string, DynamoDBEntry>(capacity);
+        }
+
         internal Document(Document source)
         {
             originalValues = new Dictionary<string, DynamoDBEntry>(source.originalValues);
@@ -399,7 +405,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
         {
             if (conversion == null) throw new ArgumentNullException("conversion");
 
-            Dictionary<string, AttributeValue> ret = new Dictionary<string, AttributeValue>();
+            Dictionary<string, AttributeValue> ret = new Dictionary<string, AttributeValue>(currentValues.Count);
 
             foreach (var kvp in currentValues)
             {
@@ -424,7 +430,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
             IEnumerable<string> epochAttributes, IEnumerable<string> epochLongAttributes, bool isEmptyStringValueEnabled)
         {
             if (conversion == null) throw new ArgumentNullException("conversion");
-            Dictionary<string, ExpectedAttributeValue> ret = new Dictionary<string, ExpectedAttributeValue>();
+            Dictionary<string, ExpectedAttributeValue> ret = new Dictionary<string, ExpectedAttributeValue>(currentValues.Count);
 
             foreach (var kvp in currentValues)
             {
@@ -445,7 +451,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
             bool changedAttributesOnly, IEnumerable<string> epochAttributes, IEnumerable<string> epochLongAttributes, bool isEmptyStringValueEnabled)
         {
             if (conversion == null) throw new ArgumentNullException("conversion");
-            Dictionary<string, AttributeValueUpdate> ret = new Dictionary<string, AttributeValueUpdate>();
+            Dictionary<string, AttributeValueUpdate> ret = new Dictionary<string, AttributeValueUpdate>(currentValues.Count);
 
             foreach (var kvp in currentValues)
             {
@@ -1005,7 +1011,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
 
         internal override AttributeValue ConvertToAttributeValue(AttributeConversionConfig conversionConfig)
         {
-            var map = new Dictionary<string, AttributeValue>(StringComparer.Ordinal);
+            var map = new Dictionary<string, AttributeValue>(currentValues.Count, StringComparer.Ordinal);
             foreach(var item in currentValues)
             {
                 var key = item.Key;

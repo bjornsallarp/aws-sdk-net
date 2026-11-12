@@ -801,7 +801,8 @@ namespace Amazon.DynamoDBv2.DataModel
         }
         internal ItemStorage ObjectToItemStorageHelper(object toStore, ItemStorageConfig config, DynamoDBFlatConfig flatConfig, bool keysOnly, bool ignoreNullValues)
         {
-            ItemStorage storage = new ItemStorage(config);
+            // Key-only documents (deletes, key lookups) hold just the key attributes, so only presize full items.
+            ItemStorage storage = new ItemStorage(config, new Document(keysOnly ? 0 : config.BaseTypeStorageConfig.PropertyCount));
             PopulateItemStorage(toStore, storage, flatConfig, keysOnly, ignoreNullValues);
             return storage;
         }
